@@ -923,8 +923,8 @@ export default function Home() {
 
                     {/* Comment Form */}
                     <form onSubmit={handleSidebarCommentSubmit}>
-                      <div className="relative overflow-visible">
-                        <div className="absolute left-3 top-3 z-20">
+                      <div className="relative">
+                        <div className="absolute left-3 top-3 z-10">
                           <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs">
                             U
                           </div>
@@ -941,10 +941,10 @@ export default function Home() {
                             }}
                             placeholder="Write a comment..."
                             maxLength={500}
-                            className={`comment-textarea w-full border border-border py-3 pl-12 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-background overflow-hidden ${
+                            className={`comment-textarea w-full border border-border py-3 pl-12 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-background resize-none ${
                               sidebarCommentText.includes('\n') || sidebarCommentText.length > 50
-                                ? 'rounded-lg'
-                                : 'rounded-full'
+                                ? 'rounded-lg min-h-[48px] max-h-[120px] overflow-y-auto'
+                                : 'rounded-full h-12 overflow-hidden'
                             }`}
                           />
                         </div>
@@ -953,7 +953,7 @@ export default function Home() {
                           size="sm"
                           disabled={!sidebarCommentText.trim() || commentingPosts.has(activePostId)}
                           loading={commentingPosts.has(activePostId)}
-                          className="absolute right-3 top-3 z-20 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white w-6 h-6 p-0 rounded-full flex items-center justify-center shadow-sm"
+                          className="absolute right-3 top-3 z-10 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white w-6 h-6 p-0 rounded-full flex items-center justify-center shadow-sm"
                         >
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
