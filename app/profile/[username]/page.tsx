@@ -6,6 +6,8 @@ import { useParams } from 'next/navigation'
 import { Button } from '../../../components/ui/Button'
 import { SimpleMenu } from '../../../components/ui/SimpleMenu'
 import PostCard from '../../../components/PostCard'
+import MentionTextareaAdvanced from '../../../components/ui/MentionTextareaAdvanced'
+import MentionText from '../../../components/ui/MentionText'
 import { formatDate, formatRelativeTime } from '../../../lib/utils'
 import { Calendar, Heart, MessageCircle, UserPlus, UserMinus, MoreHorizontal, Trash2, EyeOff, FileText, Repeat2, Shield } from 'lucide-react'
 
@@ -1361,56 +1363,47 @@ export default function UserProfile() {
                       </div>
                     </div>
 
-                    {session && (
-                      <form onSubmit={handleSidebarCommentSubmit}>
-                        <div className="relative">
-                          <div className="absolute left-3 top-3 z-10">
-                            <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs">
-                              {session.user.name?.[0] || session.user.email?.[0] || 'U'}
+                                          {session && (
+                        <form onSubmit={handleSidebarCommentSubmit}>
+                          <div className="relative overflow-visible">
+                            <div className="absolute left-3 top-3 z-20">
+                              <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs">
+                                {session.user.name?.[0] || session.user.email?.[0] || 'U'}
+                              </div>
                             </div>
+                            <div className="min-w-0">
+                              <MentionTextareaAdvanced
+                                value={sidebarCommentText}
+                                onChange={setSidebarCommentText}
+                                onKeyDown={(e: React.KeyboardEvent) => {
+                                  if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault()
+                                    handleSidebarCommentSubmit(e as any)
+                                  }
+                                }}
+                                placeholder="Write a comment..."
+                                maxLength={500}
+                                className={`comment-textarea w-full border border-border py-3 pl-12 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-background overflow-hidden ${
+                                  sidebarCommentText.includes('\n') || sidebarCommentText.length > 50
+                                    ? 'rounded-lg'
+                                    : 'rounded-full'
+                                }`}
+                              />
+                            </div>
+                            <Button
+                              type="submit"
+                              size="sm"
+                              disabled={!sidebarCommentText.trim() || commentingPosts.has(activePostId)}
+                              loading={commentingPosts.has(activePostId)}
+                              className="absolute right-3 top-3 z-20 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white w-6 h-6 p-0 rounded-full flex items-center justify-center shadow-sm"
+                            >
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                            </Button>
                           </div>
-                          <textarea
-                            value={sidebarCommentText}
-                            onChange={(e) => setSidebarCommentText(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault()
-                                handleSidebarCommentSubmit(e)
-                              }
-                            }}
-                            placeholder="Write a comment..."
-                            maxLength={500}
-                            rows={1}
-                            style={{
-                              resize: 'none',
-                              height: 'auto',
-                              minHeight: '48px'
-                            }}
-                            onInput={(e) => {
-                              const target = e.target as HTMLTextAreaElement
-                              target.style.height = 'auto'
-                              target.style.height = target.scrollHeight + 'px'
-                            }}
-                            className={`comment-textarea w-full border border-border py-3 pl-12 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-background overflow-hidden ${
-                              sidebarCommentText.includes('\n') || sidebarCommentText.length > 50
-                                ? 'rounded-lg'
-                                : 'rounded-full'
-                            }`}
-                          />
-                          <Button
-                            type="submit"
-                            size="sm"
-                            disabled={!sidebarCommentText.trim() || commentingPosts.has(activePostId)}
-                            loading={commentingPosts.has(activePostId)}
-                            className="absolute right-3 top-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white w-6 h-6 p-0 rounded-full flex items-center justify-center shadow-sm"
-                          >
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </Button>
-                        </div>
-                      </form>
-                    )}
+                        </form>
+                      )}
                   </div>
 
                   <div className="flex-1 overflow-y-auto p-6">
@@ -1470,7 +1463,7 @@ export default function UserProfile() {
                                 </time>
                               </div>
                               <p className="text-base text-foreground leading-normal mb-2 whitespace-pre-wrap break-words hyphens-auto" style={{ wordBreak: 'break-word', hyphens: 'auto' }}>
-                                {comment.content}
+                                <MentionText text={comment.content} />
                               </p>
                               {session && (
                                 <div className="flex items-center justify-between">

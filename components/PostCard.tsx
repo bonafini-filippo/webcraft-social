@@ -6,6 +6,7 @@ import { formatRelativeTime } from '../lib/utils'
 import { Button } from './ui/Button'
 import { Textarea } from './ui/Textarea'
 import { SimpleMenu } from './ui/SimpleMenu'
+import MentionText from './ui/MentionText'
 
 interface User {
   id: string
@@ -210,7 +211,7 @@ const PostCard = ({
 
         {/* Content: Contenuto del post allineato a sinistra */}
         <div className="text-foreground text-base leading-normal mb-4 whitespace-pre-wrap break-words hyphens-auto" style={{ wordBreak: 'break-word', hyphens: 'auto' }}>
-          {post.content}
+          <MentionText text={post.content} />
         </div>
 
         {/* Footer: Actions con menu alla fine */}
